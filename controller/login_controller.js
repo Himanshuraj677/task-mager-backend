@@ -19,6 +19,9 @@ const loginControl = async(req, res, next) => {
                 err.status = 401;
                 return next (err);
             }
+            else if (!results[0].is_verified) {
+                res.status(400).json({mesage: "Kindly verify your email"});
+            }
             else {
                 const hashedPassword = results[0].password;
                 let isMatched = await compareHashedPassword(password, hashedPassword);

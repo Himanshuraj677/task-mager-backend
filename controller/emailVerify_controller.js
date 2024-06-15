@@ -2,6 +2,7 @@ const con = require('../config/db_connection');
  
 const emailVerifyControl = (req, res, next) => {
     const {email, otp} = req.body;
+    // const otp = parseInt(getotp);
     if (!email || !otp) {
         const err = new Error("Email and OTP are required");
         err.status = 400;
@@ -13,20 +14,21 @@ const emailVerifyControl = (req, res, next) => {
         if (error) return next(error);
         if (results.length == 0) {
             let err = new Error("You haven't registered");
-            err.status(403);
+            err.status = 403;
             return next(err);
         }
         const user = results[0];
         if (user.is_verified) {
             let err = new Error("You haven already verified your mail");
-            err.status(400);
+            err.status = 400;
             return next(err);
         }
         else {
             const currentTime = new Date(Date.now());
             if (user.expirationTime < currentTime) {
                 let err = new Error("Invalid OTP");
-                err.status(401);
+                console.log("Otp has expired");
+                err.status = 401;
                 return next(err);
             }
             else {
@@ -38,8 +40,9 @@ const emailVerifyControl = (req, res, next) => {
                     });
                 }
                 else {
-                    let err = new Error("Invalid OTP");
-                    err.status(401);
+                    console.log("Wrong otp");
+                    err = new Error("Invalid OTP");
+                    err.status= 401;
                     return next(err);
                 }
             }

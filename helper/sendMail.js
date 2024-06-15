@@ -11,20 +11,21 @@ const transporter = nodemailer.createTransport({
 
 
 // Send email
-const sendMail = async (email, verificationCode) => {
+const sendMail = async (email, textBody) => {
 
     // Define email options
     let mailOptions = {
         from: `"Task Manager" <${process.env.EMAIL}>`, // sender address
         to: email, // list of receivers
         subject: 'Email Verification', // Subject line
-        text: `Your verification code is: ${verificationCode}`, // plain text body
+        text: textBody, // plain text body
       };
 
     try {
         await transporter.sendMail(mailOptions);
         console.log('Verification email sent');
     } catch (error) {
+        throw error;
         console.error('Error sending verification email:', error);
     }
 }

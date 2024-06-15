@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const con = require("../config/db_connection");
 const {generateHashedPassword, comparePassword} = require('../helper/bcryptUtil');
 const generateOTP = require('../helper/generateCode');
-const sendMail = require('../helper/sendOTP');
+const sendMail = require('../helper/sendMail');
 
 const registerControl = async(req, res, next) => {
     const { username, name, email, password } = req.body;
@@ -33,12 +33,13 @@ const registerControl = async(req, res, next) => {
                 // Generate hashed password
                 const hashedPassword = await generateHashedPassword(password);
                 const otp = generateOTP();
+                const text = `Your verification code is: ${otp}`;
                 const values = [username, name, email, hashedPassword, timeStamp, timeStamp, timeStamp, otp, expirationTime];
                 con.query(command, values, async(err, results) => {
                     if(err) {
                         return next(err);
                     }
-                    await sendMail(email, otp);
+                    await sendMail(email, text);
                     res.status(200).json({message: "You have registered succesfully"});
                 })
             }

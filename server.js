@@ -4,6 +4,7 @@ const cors = require('cors');
 const router = require('./router/userRouter');
 const errorHandler = require('./middleware/errorHandler');
 const verifyJSONWebToken = require('./middleware/jwt_verifier');
+const taskRouter = require('./router/taskRouter')
 require('./config/db_connection');
 
 const app = express();
@@ -17,6 +18,8 @@ app.use(verifyJSONWebToken);
 app.get('/protected', (req, res) => {
     res.json({ message: 'This is a protected route', user: req.user });
 });
+
+app.use('/task', taskRouter);
 
 
 app.use(errorHandler);
