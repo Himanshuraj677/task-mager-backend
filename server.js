@@ -4,7 +4,7 @@ const cors = require('cors');
 const router = require('./router/userRouter');
 const errorHandler = require('./middleware/errorHandler');
 const verifyJSONWebToken = require('./middleware/jwt_verifier');
-const taskRouter = require('./router/taskRouter')
+const linkRouter = require('./router/linkRouter')
 require('./config/db_connection');
 
 const app = express();
@@ -13,16 +13,17 @@ app.use(express.json());
 app.use('/user', router);
 
 
+app.use('/link', linkRouter);
 app.use(verifyJSONWebToken);
 // Protected route will start from here
 app.get('/protected', (req, res) => {
     res.json({ message: 'This is a protected route', user: req.user });
 });
 
-app.use('/task', taskRouter);
 
 
 app.use(errorHandler);
 app.listen(3000, () => {
-    console.log("Server is running");
+    console.log("Server is running on URL: http://127.0.0.1:3000");
 })
+

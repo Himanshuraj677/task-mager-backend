@@ -1,6 +1,6 @@
-const generateResetToken = require('../helper/resetToken');
-const con = require('../config/db_connection');
-const sendMail = require('../helper/sendMail');
+const generateResetToken = require('../../helper/resetToken');
+const con = require('../../config/db_connection');
+const sendMail = require('../../helper/sendMail');
 
 const forgetPaasword = (req, res, next) => {
     const {email} = req.body;

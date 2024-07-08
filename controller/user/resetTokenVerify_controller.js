@@ -1,5 +1,5 @@
-const con = require('../config/db_connection');
-const {generateHashedPassword} = require('../helper/bcryptUtil');
+const con = require('../../config/db_connection');
+const {generateHashedPassword} = require('../../helper/bcryptUtil');
 
 const verifyResetToken = (req, res, next) => {
     const {resetToken, password} = req.body;

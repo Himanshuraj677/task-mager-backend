@@ -1,8 +1,8 @@
-const con = require('../config/db_connection');
+const con = require('../../config/db_connection');
  
 const emailVerifyControl = (req, res, next) => {
-    const {email, otp} = req.body;
-    // const otp = parseInt(getotp);
+    let {email, otp} = req.body;
+    otp = parseInt(otp);
     if (!email || !otp) {
         const err = new Error("Email and OTP are required");
         err.status = 400;
@@ -10,6 +10,7 @@ const emailVerifyControl = (req, res, next) => {
     }
     let command = `SELECT * FROM userlist WHERE email = ? `;
     let values = [email];
+    console.log(`email:${email}\notp:${otp}`)
     con.query(command, values, (error, results) => {
         if (error) return next(error);
         if (results.length == 0) {

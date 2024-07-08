@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
-const con = require("../config/db_connection");
-const {generateHashedPassword, comparePassword} = require('../helper/bcryptUtil');
-const generateOTP = require('../helper/generateCode');
-const sendMail = require('../helper/sendMail');
+const con = require("../../config/db_connection");
+const {generateHashedPassword, comparePassword} = require('../../helper/bcryptUtil');
+const generateOTP = require('../../helper/generateCode');
+const sendMail = require('../../helper/sendMail');
 
 const registerControl = async(req, res, next) => {
     const { username, name, email, password } = req.body;
-
+    console.log("Req received successfully");
     if (!username || !email || !password) {
         const err = new Error("All fields are compulsory");
         err.status = 400;

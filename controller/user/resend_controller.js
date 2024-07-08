@@ -1,6 +1,6 @@
-const con = require('../config/db_connection');
-const sendMail = require('../helper/sendMail');
-const generateOTP = require('../helper/generateCode');
+const con = require('../../config/db_connection');
+const sendMail = require('../../helper/sendMail');
+const generateOTP = require('../../helper/generateCode');
 
 
 const resendVerificationCode = (req, res, next) => {

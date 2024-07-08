@@ -1,6 +1,6 @@
-const con = require('../config/db_connection');
-const {compareHashedPassword} = require('../helper/bcryptUtil');
-const {issueToken} = require('../helper/jwtUtil');
+const con = require('../../config/db_connection');
+const {compareHashedPassword} = require('../../helper/bcryptUtil');
+const {issueToken} = require('../../helper/jwtUtil');
 
 const loginControl = async(req, res, next) => {
     const {email, password} = req.body;
