@@ -1,24 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const router = require('./router/userRouter');
-const errorHandler = require('./middleware/errorHandler');
-const verifyJSONWebToken = require('./middleware/jwt_verifier');
 const linkRouter = require('./router/linkRouter')
+const errorHandler = require('./middleware/errorHandler');
 require('./config/db_connection');
 
 const app = express();
 app.use(cors())
 app.use(express.json());
-app.use('/user', router);
 
+app.use((req, res, next) => {
+    res.setHeader('Permissions-Policy', 'unload=*');
+    next();
+});
 
 app.use('/link', linkRouter);
-app.use(verifyJSONWebToken);
-// Protected route will start from here
-app.get('/protected', (req, res) => {
-    res.json({ message: 'This is a protected route', user: req.user });
-});
 
 
 

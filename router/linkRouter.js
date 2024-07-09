@@ -1,17 +1,14 @@
 const linkRouter = require('express').Router();
 const createLink = require('../controller/link/createLinkController');
-const removeLink = require('../controller/link/removeLinkController');
-const updateLink = require('../controller/link/updateLink_controller');
-const getLink = require('../controller/link/getLinkController');
-const getAllLink = require('../controller/link/getAllLinkController');
-const {redirectLink} = require('../controller/link/redirectLinkController');
+const redirectLink = require('../controller/link/redirectLinkController');
+const trackLinkController = require('../controller/link/trackingLinkController');
+const trackingMiddleware = require('../middleware/tracking')
 
 linkRouter
  .post('/', createLink)
- .delete('/:id', removeLink)
- .put('/:id', updateLink)
- .get('/:id', getLink)
- .get('/', getAllLink)
- .get('/redirect/:shortened_url', redirectLink)
+ .post('/redirect/:shortened_url', trackingMiddleware, redirectLink)
+ .get('/track/:tracking_id', trackLinkController);
 
 module.exports = linkRouter;
+
+
