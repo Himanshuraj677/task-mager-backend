@@ -3,7 +3,8 @@ const con = require('../config/db_connection');
 const useragent = require('useragent');
 
 const trackingMiddleware = async (req, res, next) => {
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ipAddressRaw = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ipAddress = ipAddressRaw.split(',')[0].trim();
     const userAgent = req.headers['user-agent'];
     const { shortened_url } = req.params;
     // console.log("Let track");
