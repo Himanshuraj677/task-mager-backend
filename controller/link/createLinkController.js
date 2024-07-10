@@ -20,7 +20,7 @@ const createLink = (req, res, next) => {
                 // console.error('Error inserting link:', error);
                 return res.status(500).json({ error: 'Failed to create link' });
             }
-            return res.status(201).json({ shortened_url: `http://localhost:3001/${shortened_url}`, trackingId});
+            return res.status(201).json({ shortened_url: `https://qct.netlify.app/${shortened_url}`, trackingId});
         });
     };
 
