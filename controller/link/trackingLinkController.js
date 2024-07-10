@@ -19,6 +19,9 @@ const trackLinkController = async (req, res) => {
                 // console.error('Error fetching tracking details:', error);
                 return res.status(500).json({ error: 'Failed to fetch tracking details' });
             }
+            if (trackingResults.length === 0) {
+                return res.status(404).json({ message: 'Link has not opened yet' });
+            }
             return res.status(200).json(trackingResults);
         });
     });
