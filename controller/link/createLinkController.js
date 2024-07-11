@@ -17,10 +17,10 @@ const createLink = (req, res, next) => {
         const insertQuery = `INSERT INTO links (user_id, original_url, shortened_url, tracking_id) VALUES (?, ?, ?, ?)`;
         con.query(insertQuery, [user_id, original_url, shortened_url, trackingId], (error, results) => {
             if (error) {
-                // console.error('Error inserting link:', error);
-                return res.status(500).json({ error: 'Failed to create link' });
+                console.error('Error inserting link:', error);
+                return res.status(500).json({ error: 'Internal server error 1' });
             }
-            return res.status(201).json({ shortened_url: `http://localhost:3001/${shortened_url}`, trackingId});
+            return res.status(201).json({ shortened_url: `https://qct.netlify.app/${shortened_url}`, trackingId});
         });
     };
 
@@ -28,8 +28,8 @@ const createLink = (req, res, next) => {
         const checkQuery = `SELECT * FROM links WHERE shortened_url = ?`;
         con.query(checkQuery, [shortened_url], (error, results) => {
             if (error) {
-                // console.error('Error checking link:', error);
-                return res.status(500).json({ error: 'Failed to create link' });
+                console.error('Error checking link:', error);
+                return res.status(500).json({ error: 'Internal Server error 2' });
             }
             if (results.length !== 0) {
                 return res.status(409).json({ message: "Link already exists" });
