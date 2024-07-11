@@ -1,14 +1,15 @@
+// config/db_connection.js
+
 const mysql = require('mysql2');
-const con = mysql.createConnection({
+
+const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-})
-
-con.connect((err) => {
-    if(err) throw err;
-    else console.log("Database connected successfully");
+    waitForConnections: true,
+    connectionLimit: 10, // Adjust the limit based on your requirements
+    queueLimit: 0
 });
 
-module.exports = con;
+module.exports = pool.promise(); // Using promise-based pool for async/await

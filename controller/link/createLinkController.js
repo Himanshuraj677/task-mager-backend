@@ -1,46 +1,44 @@
-const con = require("../../config/db_connection");
+const pool = require("../../config/db_connection");
 const ShortUniqueId = require('short-unique-id');
 
-const createLink = (req, res, next) => {
+const createLink = async (req, res, next) => {
     let { original_url, userId, shortened_url } = req.body;
 
-    const uid = new ShortUniqueId(); // instantiate without options here
+    const uid = new ShortUniqueId();
     const user_id = userId || process.env.DEFAULT_USER_ID;
     const trackingId = uid.randomUUID(10);
 
-    const checkAndInsertLink = () => {
+    const checkAndInsertLink = async () => {
         if (!shortened_url) {
-            // Generate a unique ID
-            shortened_url = uid.randomUUID(6); // Use the randomUUID method to generate a 6-character ID
+            shortened_url = uid.randomUUID(6);
         }
 
         const insertQuery = `INSERT INTO links (user_id, original_url, shortened_url, tracking_id) VALUES (?, ?, ?, ?)`;
-        con.query(insertQuery, [user_id, original_url, shortened_url, trackingId], (error, results) => {
-            if (error) {
-                console.error('Error inserting link:', error);
-                return res.status(500).json({ error: 'Internal server error 1' });
-            }
-            return res.status(201).json({ shortened_url: `https://qct.netlify.app/${shortened_url}`, trackingId});
-        });
+        try {
+            await pool.query(insertQuery, [user_id, original_url, shortened_url, trackingId]);
+            res.status(201).json({ shortened_url: `https://qct.netlify.app/${shortened_url}`, trackingId });
+        } catch (error) {
+            console.error('Error inserting link:', error);
+            res.status(500).json({ error: 'Internal server error 1' });
+        }
     };
 
     if (shortened_url) {
         const checkQuery = `SELECT * FROM links WHERE shortened_url = ?`;
-        con.query(checkQuery, [shortened_url], (error, results) => {
-            if (error) {
-                console.error('Error checking link:', error);
-                return res.status(500).json({ error: 'Internal Server error 2' });
-            }
+        try {
+            const [results] = await pool.query(checkQuery, [shortened_url]);
             if (results.length !== 0) {
-                return res.status(409).json({ message: "Link already exists" });
+                res.status(409).json({ message: "Link already exists" });
             } else {
                 checkAndInsertLink();
             }
-        });
+        } catch (error) {
+            console.error('Error checking link:', error);
+            res.status(500).json({ error: 'Internal Server error 2' });
+        }
     } else {
         checkAndInsertLink();
     }
 };
 
 module.exports = createLink;
-
